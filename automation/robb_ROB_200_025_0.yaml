@@ -1,11 +1,11 @@
 blueprint:
-  name: Robb smarrt 8-button switch
+  name: Robb smart 8-button switch ROB_200-025-0
   description:  |
     This blueprint is for the  Robb smarrt 8-button switch panel (ROBB ROB_200-025-0) when used with zha.
     It is for general use so all buttons can be connected to any action of your choice. This remote supports short button clicks and long button presses (over 4 seconds)
     Make sure to select the correct sensor for the remote.
   domain: automation
-  source_url: fix
+  source_url: https://github.com/petorian/ha-blueprints/blob/main/automation/robb_ROB_200_025_0.yaml
   input:
     remote:
       name: Remote
