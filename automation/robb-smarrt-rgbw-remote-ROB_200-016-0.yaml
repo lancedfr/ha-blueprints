@@ -210,6 +210,8 @@ action:
   - conditions:
     - '{{ cmd == "move_to_color_temp" }}'
     sequence:
+    - variables:
+        temp: '{{ trigger.event.data.params.color_temp_mireds }}'
     - choose:
       - conditions:
         - '{{ group == 1 }}'
@@ -295,8 +297,6 @@ action:
   - conditions:
     - '{{ cmd == "step" }}'
     sequence:
-    - variables:
-        temp: '{{ trigger.event.data.params.color_temp_mireds }}'
     - choose:
       - conditions:
         - '{{ group == 1 }}'
