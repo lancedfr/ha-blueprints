@@ -1,0 +1,390 @@
+blueprint:
+  name: Robb smarrt rgbw remote control
+  description: 'This blueprint is for the Robb smarrt RGBW remote control (ROBB
+    ROB_200-016-0) when used with zha.
+
+    For controlling RGBW lights in 3 selectable groups, select
+    buttons 1-3 to activate one or more groups. 
+    
+    The scene buttons (S1-S5) can be connected to any action 
+    of your choice. The S-buttons can be set per group so 15 different sequence
+    or the group selection can be ignored (via "Handle button per group" ) then
+    only 5 sequences can be programmed
+    
+    The home button does not send any messages.
+
+    Make sure to select the correct entity for the remote.
+
+    '
+  domain: automation
+  source_url: https://github.com/Bekkie/ha-blueprints/blob/main/automation/robb-smarrt-rgbw-remote-ROB_200-016-0.yaml
+  input:
+    remote:
+      name: Remote
+      description: RGBW remote to use
+      selector:
+        device:
+          integration: zha
+          model: ROB_200-016-0
+
+    light_group_1:
+      name: Light group 1
+      description: "The light or light group entity assigned to button 1 on the remote"
+      default: []
+      selector:
+        entity:
+          domain:
+            - light
+            - group
+          multiple: true
+    light_group_2:
+      name: Light group 2
+      description: "The light or light group entity assigned to button 2 on the remote"
+      default: []
+      selector:
+        entity:
+          domain:
+            - light
+            - group
+          multiple: true
+    light_group_3:
+      name: Light group 3
+      description: "The light or light group entity assigned to button 3 on the remote"
+      default: []
+      selector:
+        entity:
+          domain:
+            - light
+            - group
+          multiple: true
+
+    separate_groups:
+      name: Handle button per group
+      description: "Handle S buttons per group (have 15 actions) or ignore the group selection (have 5 actions), if false only the first 5 buttons actions are executed the rest is ignored."
+      default: [true]
+      selector:
+        boolean: 
+    button_g1_s1:
+      name: Button S1 (group 1)
+      description: "The action(s) to be execute when button S1 is pressed and group 1 is selected"
+      default: []
+      selector:
+        action: {}
+    button_g1_s2:
+      name: Button S2  (group 1)
+      description: "The action(s) to be execute when button S2 is pressed and group 1 is selected"
+      default: []
+      selector:
+        action: {}
+    button_g1_s3:
+      name: Button S3  (group 1)
+      description: "The action(s) to be execute when button S3 is pressed and group 1 is selected"
+      default: []
+      selector:
+        action: {}
+    button_g1_s4:
+      name: Button S4  (group 1)
+      description: "The action(s) to be execute when button S4 is pressed and group 1 is selected"
+      default: []
+      selector:
+        action: {}
+    button_g1_s5:
+      name: Button S5  (group 1)
+      description: "The action(s) to be execute when button S5 is pressed and group 1 is selected"
+      default: []
+      selector:
+        action: {}
+
+    button_g2_s1:
+      name: Button S1  (group 2)
+      description: "The action(s) to be execute when button S1 is pressed and group 2 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+    button_g2_s2:
+      name: Button S2  (group 2)
+      description: "The action(s) to be execute when button S2 is pressed and group 2 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+    button_g2_s3:
+      name: Button S3  (group 2)
+      description: "The action(s) to be execute when button S3 is pressed and group 2 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+    button_g2_s4:
+      name: Button S4  (group 2)
+      description: "The action(s) to be execute when button S4 is pressed and group 2 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+    button_g2_s5:
+      name: Button S5  (group 2)
+      description: "The action(s) to be execute when button S5 is pressed and group 2 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+
+    button_g3_s1:
+      name: Button S1  (group 3)
+      description: "The action(s) to be execute when button S1 is pressed and group 3 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+    button_g3_s2:
+      name: Button S2  (group 3)
+      description: "The action(s) to be execute when button S2 is pressed and group 3 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+    button_g3_s3:
+      name: Button S3  (group 3)
+      description: "The action(s) to be execute when button S3 is pressed and group 3 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+    button_g3_s4:
+      name: Button S4  (group 3)
+      description: "The action(s) to be execute when button S4 is pressed and group 3 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+    button_g3_s5:
+      name: Button S5  (group 3)
+      description: "The action(s) to be execute when button S5 is pressed and group 3 is selected (ignored when 'Handle per group' is false)"
+      default: []
+      selector:
+        action: {}
+        
+mode: parallel
+max_exceeded: silent
+trigger:
+- platform: event
+  event_type: zha_event
+  event_data:
+    device_id: !input remote
+action:
+- variables:
+    group: '{{ trigger.event.data.endpoint_id }}'
+    cmd: '{{ trigger.event.data.command }}'
+    per_group:  !input separate_groups
+    
+- choose:
+  # Update light color from RGBW wheel
+  - conditions:
+    - '{{ cmd == "move_to_hue_and_saturation" }}'
+    sequence:
+    - variables:
+        hue: '{{ trigger.event.data.params.hue }}'
+        sat: '{{ (trigger.event.data.params.saturation / 2.56) | int }}'
+        
+    - choose:
+      - conditions:
+        - '{{ group == 1 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_1
+          data:
+             hs_color: "{{ [hue, sat] }}"
+      - conditions:
+        - '{{ group == 2 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_2
+          data:
+             hs_color: "{{ [hue, sat] }}"
+      - conditions:
+        - '{{ group == 3 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_3
+          data:
+             hs_color: "{{ [hue, sat] }}"
+
+  # Update light color temperature
+  - conditions:
+    - '{{ cmd == "move_to_color_temp" }}'
+    sequence:
+    - choose:
+      - conditions:
+        - '{{ group == 1 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_1
+          data:
+             color_temp: "{{ temp }}"
+      - conditions:
+        - '{{ group == 2 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_2
+          data:
+             color_temp: "{{ temp }}"
+      - conditions:
+        - '{{ group == 3 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_3
+          data:
+             color_temp: "{{ temp }}"
+
+  # Update light light level - step up
+  - conditions:
+    - '{{ cmd == "step_with_on_off" }}'
+    sequence:
+    - choose:
+      - conditions:
+        - '{{ group == 1 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_1
+          data:
+             brightness_step: 13
+      - conditions:
+        - '{{ group == 2 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_2
+          data:
+             brightness_step: 13
+      - conditions:
+        - '{{ group == 3 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_3
+          data:
+             brightness_step: 13
+
+  # Switch light off
+  - conditions:
+    - '{{ cmd == "off" }}'
+    sequence:
+    - choose:
+      - conditions:
+        - '{{ group == 1 }}'
+        sequence:
+        - service: light.turn_off
+          target:
+             entity_id: !input light_group_1
+      - conditions:
+        - '{{ group == 2 }}'
+        sequence:
+        - service: light.turn_off
+          target:
+             entity_id: !input light_group_2
+      - conditions:
+        - '{{ group == 3 }}'
+        sequence:
+        - service: light.turn_off
+          target:
+             entity_id: !input light_group_3
+
+  
+  # Update light light level - step down
+  - conditions:
+    - '{{ cmd == "step" }}'
+    sequence:
+    - variables:
+        temp: '{{ trigger.event.data.params.color_temp_mireds }}'
+    - choose:
+      - conditions:
+        - '{{ group == 1 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_1
+          data:
+             brightness_step: -13
+      - conditions:
+        - '{{ group == 2 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_2
+          data:
+             brightness_step: -13
+      - conditions:
+        - '{{ group == 3 }}'
+        sequence:
+        - service: light.turn_on
+          target:
+             entity_id: !input light_group_3
+          data:
+             brightness_step: -13
+  
+
+  - conditions:
+    - '{{ cmd == "recall" }}'
+    sequence: 
+    - variables:
+        button: '{{ trigger.event.data.params.scene_id }}'
+    - choose:
+      - conditions:
+        - '{{ group == 1 or not per_group }}'
+        sequence:
+        - choose:
+          - conditions:
+            - '{{ button == 1 }}'
+            sequence: !input button_g1_s1
+          - conditions:
+            - '{{ button == 2 }}'
+            sequence: !input button_g1_s2
+          - conditions:
+            - '{{ button == 3 }}'
+            sequence: !input button_g1_s3
+          - conditions:
+            - '{{ button == 4 }}'
+            sequence: !input button_g1_s4
+          - conditions:
+            - '{{ button == 5 }}'
+            sequence: !input button_g1_s5
+            
+      - conditions:
+        - '{{ group == 2 and per_group }}'
+        sequence:
+        - choose:
+          - conditions:
+            - '{{ button == 1 }}'
+            sequence: !input button_g2_s1
+          - conditions:
+            - '{{ button == 2 }}'
+            sequence: !input button_g2_s2
+          - conditions:
+            - '{{ button == 3 }}'
+            sequence: !input button_g2_s3
+          - conditions:
+            - '{{ button == 4 }}'
+            sequence: !input button_g2_s4
+          - conditions:
+            - '{{ button == 5 }}'
+            sequence: !input button_g2_s5
+    
+      - conditions:
+        - '{{ group == 3 and per_group }}'
+        sequence:
+        - choose:
+          - conditions:
+            - '{{ button == 1 }}'
+            sequence: !input button_g3_s1
+          - conditions:
+            - '{{ button == 2 }}'
+            sequence: !input button_g3_s2
+          - conditions:
+            - '{{ button == 3 }}'
+            sequence: !input button_g3_s3
+          - conditions:
+            - '{{ button == 4 }}'
+            sequence: !input button_g3_s4
+          - conditions:
+            - '{{ button == 5 }}'
+            sequence: !input button_g3_s5
