@@ -17,6 +17,7 @@ blueprint:
 
     '
   domain: automation
+  author: Bart Eversdijk
   source_url: https://github.com/Bekkie/ha-blueprints/blob/main/automation/robb-smarrt-rgbw-remote-ROB_200-016-0.yaml
   input:
     remote:
