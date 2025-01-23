@@ -3,13 +3,14 @@ blueprint:
   description: 'This blueprint is for the  Robb smarrt 4 channel remote control (ROBB
     ROB_200-024-0) when used with zha.
 
-    It is for general use so all oval buttons (1-4, S1 and S2) can be connected to any action of your choice. The (1) and (0) button will activate buuton 1 till 4 is a sequence.
+    It is for general use so all oval buttons (1-4, S1 and S2) can be connected to any action of your choice. The (1) and (0) button will activate button 1 till 4 is a sequence.
     This remote supports short button clicks and long button presses (over 4 seconds)
 
     Make sure to select the correct sensor for the remote.
 
     '
   domain: automation
+  author: Bart Eversdijk
   source_url: https://github.com/Bekkie/ha-blueprints/blob/main/automation/robb-smarrt-4-ch-remote-ROB_200-024-0.yaml
   input:
     remote:
@@ -131,7 +132,6 @@ action:
 - variables:
     button: '{{ trigger.event.data.endpoint_id }}'
     cmd: '{{ trigger.event.data.command }}'
-    args: '{{ trigger.event.data.args }}'
 - choose:
   - conditions:
     - '{{ button == 1 and cmd == ''on'' }}'
@@ -142,9 +142,11 @@ action:
   - conditions:
     - '{{ button == 1 and cmd == ''move_with_on_off'' }}'
     sequence:
+    - variables:
+        mode: '{{ trigger.event.data.params.move_mode }}'
     - if:
       - condition:
-        - '{{ args[11] == "U" }}'
+        - '{{ mode == "MoveMode.Up" }}'
       then: !input on_button_1_long
       else: !input off_button_1_long
   - conditions:
@@ -156,9 +158,11 @@ action:
   - conditions:
     - '{{ button == 2 and cmd == ''move_with_on_off'' }}'
     sequence:
+    - variables:
+        mode: '{{ trigger.event.data.params.move_mode }}'
     - if:
       - condition:
-        - '{{ args[11] == "U" }}'
+        - '{{ mode == "MoveMode.Up" }}'
       then: !input on_button_2_long
       else: !input off_button_2_long
   - conditions:
@@ -170,9 +174,11 @@ action:
   - conditions:
     - '{{ button == 3 and cmd == ''move_with_on_off'' }}'
     sequence:
+    - variables:
+        mode: '{{ trigger.event.data.params.move_mode }}'
     - if:
       - condition:
-        - '{{ args[11] == "U" }}'
+        - '{{ mode == "MoveMode.Up" }}'
       then: !input on_button_3_long
       else: !input off_button_3_long
   - conditions:
@@ -184,24 +190,30 @@ action:
   - conditions:
     - '{{ button == 4 and cmd == ''move_with_on_off'' }}'
     sequence:
+    - variables:
+        mode: '{{ trigger.event.data.params.move_mode }}'
     - if:
       - condition:
-        - '{{ args[11] == "U" }}'
+        - '{{ mode == "MoveMode.Up" }}'
       then: !input on_button_4_long
       else: !input off_button_4_long
   - conditions:
-    - '{{ button == 1 and cmd == ''recall'' }}'
+    - '{{ button == 1 and cmd == "recall" }}'
     sequence: 
+    - variables:
+        sbutton: '{{ trigger.event.data.params.scene_id }}'
     - if:
       - condition:
-        - '{{ args[1] == 1 }}'
+        - '{{ sbutton == 1 }}'
       then: !input s1_button_short
       else: !input s2_button_short
   - conditions:
-    - '{{ button == 1 and cmd == ''store'' }}'
+    - '{{ button == 1 and cmd == "store" }}'
     sequence: 
+    - variables:
+        sbutton: '{{ trigger.event.data.params.scene_id }}'
     - if:
       - condition:
-        - '{{ args[1] == 1 }}'
+        - '{{ sbutton == 1 }}'
       then: !input s1_button_long
       else: !input s2_button_long
