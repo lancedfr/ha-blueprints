@@ -32,6 +32,12 @@ The available actions are:
 
 This allows you to map any of the button (events) to any action you choose.
 
+### automation/robb-smarrt-rgbw-remote-ROB_200-016-0.yaml
+
+It’s a simple blueprint for ROBB SMARRT ZigBee RGBW Remote controller, that maps all the available actions for all 5 S buttons and enabling RGBW light to changes color per group (1-3)
+This allows you to map any of the button (events) to any action you choose.
+
+
 ### automation/robb-smart-8-switch-ROBB-ROB_200-007-0.yaml
 Old name keeping for installed base
 
