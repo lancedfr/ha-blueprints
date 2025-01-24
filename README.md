@@ -13,6 +13,7 @@ The available actions are:
 - long press (each button)
 
 This allows you to map any of the button (events) to any action you choose.
+Should now also work for these types ROB_200_025_0, VES-ZB-WAL-012, SR-ZG9001K8-DIM
 
 ### automation/robb-smarrt-4-switch-ROB_200-008-0.yaml
 
