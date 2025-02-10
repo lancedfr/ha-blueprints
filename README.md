@@ -32,6 +32,7 @@ The available actions are:
 - long press (each button)
 
 This allows you to map any of the button (events) to any action you choose.
+Should now also work for this type: ZGRC-KEY-013
 
 ### automation/robb-smarrt-rgbw-remote-ROB_200-016-0.yaml
 
