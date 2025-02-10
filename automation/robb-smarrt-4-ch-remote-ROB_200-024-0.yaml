@@ -1,7 +1,7 @@
 blueprint:
   name: Robb smarrt 4 channel remote controller
   description: 'This blueprint is for the  Robb smarrt 4 channel remote control (ROBB
-    ROB_200-024-0) when used with zha.
+    ROB_200-024-0) when used with zha. (Also supports Vesternet 12 Button Remote Control)
 
     It is for general use so all oval buttons (1-4, S1 and S2) can be connected to any action of your choice. The (1) and (0) button will activate button 1 till 4 is a sequence.
     This remote supports short button clicks and long button presses (over 4 seconds)
@@ -18,8 +18,11 @@ blueprint:
       description: Switch remote to use
       selector:
         device:
-          integration: zha
-          model: ROB_200-024-0
+          filter:
+            - integration: zha
+              model: ROB_200-024-0
+            - integration: zha
+              model: ZGRC-KEY-013
 
     on_button_1_short:
       name: On button 1 - short
