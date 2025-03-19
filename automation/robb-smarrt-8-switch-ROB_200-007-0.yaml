@@ -12,7 +12,7 @@ blueprint:
     '
   domain: automation
   author: Bart Eversdijk
-  source_url: https://github.com/Bekkie/ha-blueprints/blob/main/automation/robb-smart-8-switch-ROB_200-007-0.yaml
+  source_url: https://github.com/lancedfr/ha-blueprints/blob/main/automation/robb-smart-8-switch-ROB_200-007-0.yaml
   input:
     remote:
       name: Remote
@@ -28,6 +28,8 @@ blueprint:
               model: VES-ZB-WAL-012
             - integration: zha
               model: SR-ZG9001K8-DIM
+            - integration: zha
+              model: ZG2833K8_EU05
           multiple: false
     on_button_1_short:
       name: On button 1 - short
